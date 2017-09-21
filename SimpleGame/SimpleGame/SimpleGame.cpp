@@ -16,15 +16,17 @@ but WITHOUT ANY WARRANTY.
 #include "Renderer.h"
 
 Renderer *g_Renderer = NULL;
-
+int vx = 0;
 void RenderScene(void)
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glClearColor(0.0f, 0.3f, 0.3f, 1.0f);
 
 	// Renderer Test
-	g_Renderer->DrawSolidRect(0, 0, 0, 4, 1, 0, 1, 1);
-
+	g_Renderer->DrawSolidRect(vx, 0, 0, 100, 1, 1, 1, 1);
+	vx += 1;
+	if (vx > 250)
+		vx = -250;
 	glutSwapBuffers();
 }
 
