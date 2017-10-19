@@ -19,7 +19,7 @@ CGameObject::CGameObject(mVector p,mVector s,Color c,float sz)
 	Width = 2;
 	Height = 2;
 	Col = c;
-	Pos = p;
+		Pos = p;
 	size = sz;
 	Speed = s;
 }
@@ -38,9 +38,6 @@ void CGameObject::Tick(float dTime)
 
 	if (Pos.x > 300)
 		Pos.x = -300;
-	Col.r = (float)(rand() % 101) / 100;
-	Col.g = (float)(rand() % 201) / 200;
-	Col.b = (float)(rand() % 301) / 300;
 
 }
 
