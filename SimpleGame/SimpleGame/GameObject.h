@@ -62,11 +62,12 @@ public:
 	mVector Pos;//위치 정보
 	Color Col;//컬러 값.
 	mVector Speed;//속도
-	
+	int number;
 	float size;//둘중하나 쓰자 정사각형이면 사이즈 아니면 가로세로
 	
 	float Width;//오브젝트의 가로길이
 	float Height;//오브젝트의 세로길이
+
 
 
 };
