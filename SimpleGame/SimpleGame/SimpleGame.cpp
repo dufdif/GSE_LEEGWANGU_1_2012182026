@@ -15,35 +15,36 @@ but WITHOUT ANY WARRANTY.
 #include"GameObject.h"
 #include "Renderer.h"
 #include"Scene.h"
+#include<time.h>
 
+float t = 0;
+Scene* myscene=NULL;
 
-Scene myscene;
-Renderer *g_Renderer = NULL;
+auto Time = clock();
 
 void RenderScene(void)
 {
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glClearColor(0.0f, 0.3f, 0.3f, 1.0f);
-
-	
-	// Renderer Test
-	for(int i=0;i<myscene.nObj;++i)
-		g_Renderer->DrawSolidRect(myscene.obj[i]->Pos.x, myscene.obj[i]->Pos.y, myscene.obj[i]->Pos.z, myscene.obj[i]->size,myscene.obj[i]->Col.r,myscene.obj[i]->Col.g,myscene.obj[i]->Col.b,myscene.obj[i]->Col.a);
-
-	glutSwapBuffers();
+	myscene->RenderScene();
 	
 }
 
 void Update(float dTime)//매번 모든 오브젝트를 갱신한다.
 {
-	myscene.Tick(dTime);
 
+	myscene->Tick(dTime);
+	
 }
 
 void Idle(void)
 {
-	Update(1);//델타타임을 몰라서 일단 1로둠
+	float dtime = clock() - Time;
+	Time +=dtime;
+	//t += dtime;
+	
+	//std::cout << t/1000 << std::endl;
+	Update(dtime/1000);//델타타임을 몰라서 일단 1로둠
 	RenderScene();
+	glutSwapBuffers();
 }
 
 void MouseInput(int button, int state, int x, int y)
@@ -60,7 +61,7 @@ void MouseInput(int button, int state, int x, int y)
 			case GLUT_UP:
 				if (click == true)
 				{
-					//myscene.CreateObj(mVector(x - 250, 250 - y, 0), mVector(1, 0, 0), Color(1, 1, 1, 1), rand() % 50 + 30);
+					myscene->CreateObj(mVector(x - 250, 250 - y, 0), mVector(1, 0, 0), Color(1, 1, 1, 1),rand() % 50 + 30);
 					
 					click = false;
 				}
@@ -101,16 +102,19 @@ void MouseInput(int button, int state, int x, int y)
 
 
 	RenderScene();
+	glutSwapBuffers();
 }
 
 void KeyInput(unsigned char key, int x, int y)
 {
 	RenderScene();
+	glutSwapBuffers();
 }
 
 void SpecialKeyInput(int key, int x, int y)
 {
 	RenderScene();
+	glutSwapBuffers();
 }
 
 int main(int argc, char **argv)
@@ -131,17 +135,12 @@ int main(int argc, char **argv)
 	{
 		std::cout << "GLEW 3.0 not supported\n ";
 	}
-
+	myscene = new Scene;
 
 	//오브젝트 생성
-	for(int i=0;i<Max;++i)
-		myscene.CreateObj();
+	
 	// Initialize Renderer
-	g_Renderer = new Renderer(500, 500);
-	if (!g_Renderer->IsInitialized())
-	{
-		std::cout << "Renderer could not be initialized.. \n";
-	}
+	
 
 
 
@@ -153,7 +152,7 @@ int main(int argc, char **argv)
 	
 	glutMainLoop();
 
-	delete g_Renderer;
+	
 
     return 0;
 }

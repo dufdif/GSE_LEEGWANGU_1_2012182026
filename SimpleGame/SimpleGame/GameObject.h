@@ -57,7 +57,7 @@ public:
 	CGameObject();
 	CGameObject(mVector p, mVector s, Color c, float sz);
 	~CGameObject();
-
+	int hp;
 	void Tick(float dtime);
 	mVector Pos;//위치 정보
 	Color Col;//컬러 값.
@@ -68,6 +68,6 @@ public:
 	float Width;//오브젝트의 가로길이
 	float Height;//오브젝트의 세로길이
 
-
+	bool Delobj = false;
 
 };
