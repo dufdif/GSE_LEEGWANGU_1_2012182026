@@ -70,4 +70,6 @@ public:
 
 	bool Delobj = false;
 
+	float totalDtime = 0;
+
 };

@@ -52,6 +52,10 @@ CGameObject::~CGameObject()
 
 void CGameObject::Tick(float dTime)
 {
+	totalDtime += dTime;
+	if (totalDtime > 10)
+		hp=0;
+
 	if (hp > 0)
 	{
 		Pos = Pos + Speed*dTime;
@@ -87,25 +91,25 @@ void CGameObject::Tick(float dTime)
 
 
 		//오브젝트 끼리 충돌
-		for (int i = 0; i < Max; ++i)
+		for (auto i =myscene->obj.begin()  ; i != myscene->obj.end(); ++i)
 		{
-			if (i != number && myscene->obj[i] != NULL)
+			if (this !=( *i))
 			{
-				auto cx = myscene->obj[i]->Pos.x - Pos.x;
-				auto cy = myscene->obj[i]->Pos.y - Pos.y;
+				auto cx = (*i)->Pos.x - Pos.x;
+				auto cy = (*i)->Pos.y - Pos.y;
 				float d = sqrt(cx*cx + cy*cy);
 				if (d < size * 2)
 				{
-					auto ts = myscene->obj[i]->Speed;
-					myscene->obj[i]->Speed = Speed;
+					auto ts = (*i)->Speed;
+					(*i)->Speed = Speed;
 					Speed = ts;
 					Pos = Pos + Speed*dTime * 3;
-					myscene->obj[i]->Pos = myscene->obj[i]->Pos + myscene->obj[i]->Speed*dTime * 3;
+					(*i)->Pos = (*i)->Pos + (*i)->Speed*dTime * 3;
 					Col.r -= 0.25;
-					myscene->obj[i]->Col.r -= 0.25;
+					(*i)->Col.r -= 0.25;
 
-					hp -= 10;
-					myscene->obj[i]->hp -= 10;
+					hp -= 25;
+					(*i)->hp -= 10;
 
 				}
 			}

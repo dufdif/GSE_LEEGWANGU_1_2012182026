@@ -1,6 +1,11 @@
 #pragma once
 #include"GameObject.h"
 #include"Renderer.h"
+#include<vector>
+#include<list>
+
+using namespace std;
+
 #define Max 10
 
 class Scene
@@ -8,7 +13,9 @@ class Scene
 public:
 	Scene();
 	int nObj;
-	CGameObject* obj[Max];
+	
+	list<CGameObject*> obj;
+	
 	Renderer *g_Renderer = NULL;
 
 	~Scene();
