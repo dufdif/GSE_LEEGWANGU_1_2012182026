@@ -78,12 +78,27 @@ void Scene::CreateObj()//여기서 모든 오브젝트를 생성.
 	
 }
 
+void Scene::CreateObj(Type t,mVector p)//여기서 모든 오브젝트를 생성.
+{
+	if (nObj < Max)
+	{
+		obj.push_back(new  CGameObject(t,p));
+
+
+		nObj += 1;
+	}
+
+}
+
+
 void Scene::DeleteObj()
 {
 	for (auto i = obj.begin(); i != obj.end();)
 	{
 		if ((*i)->Delobj == true)
 		{
+			if((*i)->type==character)
+				nCharacter -= 1;
 
 			delete (*i);
 			auto t = i;

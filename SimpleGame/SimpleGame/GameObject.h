@@ -50,17 +50,24 @@ typedef struct Color
 
 }Color;
 
+enum Type
+{
+	character,building,bullet,arrow
+};
 
 class CGameObject
 {
 public:
 	CGameObject();
+	CGameObject(Type type,mVector p);
 	CGameObject(mVector p, mVector s, Color c, float sz);
 	~CGameObject();
 	int hp;
+	int maxhp;
 	void Tick(float dtime);
 	mVector Pos;//위치 정보
 	Color Col;//컬러 값.
+	Color orgCol;//본래 컬러값
 	mVector Speed;//속도
 	int number;
 	float size;//둘중하나 쓰자 정사각형이면 사이즈 아니면 가로세로
@@ -71,5 +78,11 @@ public:
 	bool Delobj = false;
 
 	float totalDtime = 0;
+
+	float Damage;
+
+	bool Enemy;
+
+	Type type;
 
 };

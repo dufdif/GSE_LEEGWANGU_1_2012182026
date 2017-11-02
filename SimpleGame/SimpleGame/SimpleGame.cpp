@@ -61,7 +61,8 @@ void MouseInput(int button, int state, int x, int y)
 			case GLUT_UP:
 				if (click == true)
 				{
-					myscene->CreateObj(mVector(x - 250, 250 - y, 0), mVector(1, 0, 0), Color(1, 1, 1, 1),rand() % 50 + 30);
+					if(myscene->nCharacter<CharacterMax)
+						myscene->CreateObj(character,mVector(x - 250, 250 - y, 0));
 					
 					click = false;
 				}
@@ -141,7 +142,7 @@ int main(int argc, char **argv)
 	
 	// Initialize Renderer
 	
-
+	myscene->CreateObj(building, mVector(0, 0, 0));
 
 
 	glutDisplayFunc(RenderScene);

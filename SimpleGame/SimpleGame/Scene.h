@@ -6,13 +6,14 @@
 
 using namespace std;
 
-#define Max 10
-
+#define Max 100
+#define CharacterMax 10
 class Scene
 {
 public:
 	Scene();
 	int nObj;
+	int nCharacter = 0;
 	
 	list<CGameObject*> obj;
 	
@@ -21,6 +22,7 @@ public:
 	~Scene();
 
 	void CreateObj(mVector Pos, mVector vel, Color col,float w);
+	void CreateObj(Type t,mVector Pos);
 	void DeleteObj();
 	void CreateObj();
 	void Tick(float dtime = 0);
