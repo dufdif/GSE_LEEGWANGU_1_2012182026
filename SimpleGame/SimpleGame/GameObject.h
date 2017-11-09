@@ -59,9 +59,10 @@ class CGameObject
 {
 public:
 	CGameObject();
-	CGameObject(Type type,mVector p);
+	CGameObject(Type type,mVector p,  bool t = false,mVector s=mVector(0,0,0));
 	CGameObject(mVector p, mVector s, Color c, float sz);
 	~CGameObject();
+	CGameObject* Master;
 	int hp;
 	int maxhp;
 	void Tick(float dtime);
@@ -84,5 +85,8 @@ public:
 	bool Enemy;
 
 	Type type;
+	void SetMaster(CGameObject* m) { Master = m; }
+	bool tex;
+	
 
 };

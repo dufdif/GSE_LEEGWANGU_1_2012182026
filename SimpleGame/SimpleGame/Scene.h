@@ -22,7 +22,7 @@ public:
 	~Scene();
 
 	void CreateObj(mVector Pos, mVector vel, Color col,float w);
-	void CreateObj(Type t,mVector Pos);
+	void CreateObj(Type t,mVector Pos,bool te=false,mVector s=mVector(0,0,0));
 	void DeleteObj();
 	void CreateObj();
 	void Tick(float dtime = 0);

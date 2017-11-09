@@ -142,7 +142,7 @@ int main(int argc, char **argv)
 	
 	// Initialize Renderer
 	
-	myscene->CreateObj(building, mVector(0, 0, 0));
+	myscene->CreateObj(building, mVector(0, 0, 0),true);
 
 
 	glutDisplayFunc(RenderScene);

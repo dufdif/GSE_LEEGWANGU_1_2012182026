@@ -1,11 +1,14 @@
 #include "stdafx.h"
 #include "Scene.h"
 
+GLuint testTexture = 0;
 
 Scene::Scene()
 {
 	nObj = 0;
 	g_Renderer = new Renderer(500, 500);
+
+	testTexture = g_Renderer->CreatePngTexture(".\\Texture\\Unit1.png");
 
 	if (!g_Renderer->IsInitialized())
 	{
@@ -21,10 +24,13 @@ void Scene::RenderScene(void)
 
 
 	// Renderer Test
-	for (auto i=obj.begin(); i!=obj.end(); ++i)
-		g_Renderer->DrawSolidRect((*i)->Pos.x, (*i)->Pos.y, (*i)->Pos.z, (*i)->size, (*i)->Col.r, (*i)->Col.g, (*i)->Col.b, (*i)->Col.a);
-
-
+	for (auto i = obj.begin(); i != obj.end(); ++i)
+	{	
+		if ((*i)->tex == true)
+			g_Renderer->DrawTexturedRect((*i)->Pos.x, (*i)->Pos.y, (*i)->Pos.z, (*i)->size, (*i)->Col.r, (*i)->Col.g, (*i)->Col.b, (*i)->Col.a, testTexture);
+		else
+			g_Renderer->DrawSolidRect((*i)->Pos.x, (*i)->Pos.y, (*i)->Pos.z, (*i)->size, (*i)->Col.r, (*i)->Col.g, (*i)->Col.b, (*i)->Col.a);
+	}
 
 }
 
@@ -78,11 +84,11 @@ void Scene::CreateObj()//여기서 모든 오브젝트를 생성.
 	
 }
 
-void Scene::CreateObj(Type t,mVector p)//여기서 모든 오브젝트를 생성.
+void Scene::CreateObj(Type t,mVector p,bool te,mVector s)//여기서 모든 오브젝트를 생성.
 {
 	if (nObj < Max)
 	{
-		obj.push_back(new  CGameObject(t,p));
+		obj.push_back(new  CGameObject(t,p,te,s));
 
 
 		nObj += 1;

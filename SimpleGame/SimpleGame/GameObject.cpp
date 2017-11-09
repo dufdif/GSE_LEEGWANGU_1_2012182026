@@ -21,7 +21,7 @@ CGameObject::CGameObject()
 	if (Speed.x == 0 && Speed.y == 0)
 		Speed.y = 30;
 
-	
+	tex = false;
 
 }
 
@@ -43,15 +43,19 @@ CGameObject::CGameObject(mVector p,mVector s,Color c,float sz)
 }
 
 
-CGameObject::CGameObject(Type t,mVector p)
+CGameObject::CGameObject(Type t,mVector p, bool te,mVector s)
 {
 	Width = 1;
 	Height = 1;
 	type = t;
-
-	Speed.x = rand() % 10 - 5;
-	Speed.y = rand() % 10 - 5;
-
+	tex = te;
+	if (s.x == s.y == s.z == 0)
+	{
+		Speed.x = rand() % 10 - 5;
+		Speed.y = rand() % 10 - 5;
+	}
+	else
+		Speed = s;
 	
 
 	auto sp = sqrt((Speed.x*Speed.x) + (Speed.y*Speed.y));
@@ -88,7 +92,7 @@ CGameObject::CGameObject(Type t,mVector p)
 		orgCol = Col;
 		Speed.x = 0;
 		Speed.y = 0;
-		Damage = 0;
+		Damage = 100;
 		Enemy = true;
 		break;
 
@@ -140,7 +144,7 @@ void CGameObject::Tick(float dTime)
 	if (hp > 0)
 	{
 		Pos = Pos + Speed*dTime;
-
+		// *-------------------------- 벽과의 충돌------------------------------*
 		if (Pos.x > 250)
 		{
 			Col.r = 1;
@@ -172,37 +176,36 @@ void CGameObject::Tick(float dTime)
 			
 		}
 
+		//---------------------------------------------------------------------
 
 		//오브젝트 끼리 충돌
 		for (auto i =myscene->obj.begin()  ; i != myscene->obj.end(); ++i)
 		{
-			if ( type!=(*i)->type &&  Enemy!=(*i)->Enemy )//같은타입이 아니거나 또는 적군/아군 인경우
+
+			if ( type!=(*i)->type )//같은타입이 아니거나 
 			{
-				auto cx = (*i)->Pos.x - Pos.x;
-				auto cy = (*i)->Pos.y - Pos.y;
-				float d = (cx*cx) + (cy*cy);
-				d = sqrt(d);
-				if (d*2 < size+(*i)->size)
+				if (type == arrow && Master!=(*i)  || Enemy != (*i)->Enemy)//타입이 화살일때 
+					//소유자와 다른 오브젝트거나 서로 적대관계일때
 				{
-				//	auto ts = (*i)->Speed;
-				//	(*i)->Speed = Speed;
-				//	Speed = ts;
-				//	Pos = Pos + Speed*dTime * 3;
-				//	(*i)->Pos = (*i)->Pos + (*i)->Speed*dTime * 3;
-				
-					hp -= (*i)->Damage;
-					
-					(*i)->hp -= Damage;
 
-					
-					Col = Color(1,0,0,1);
-					(*i)->Col = Color(1, 0, 0, 1);
-					if (type == character)
+
+					auto cx = (*i)->Pos.x - Pos.x;
+					auto cy = (*i)->Pos.y - Pos.y;
+					float d = (cx*cx) + (cy*cy);
+					d = sqrt(d);
+					if (d * 2 < size + (*i)->size)
 					{
-						Delobj = true;
-						
-					}
 
+
+						hp -= (*i)->Damage;
+
+						(*i)->hp -= Damage;
+
+
+						Col = Color(1, 0, 0, 1);
+						(*i)->Col = Color(1, 0, 0, 1);
+
+					}
 				}
 			}
 			else
@@ -215,7 +218,7 @@ void CGameObject::Tick(float dTime)
 		}
 
 
-		//오브젝트 타입별 이벤트
+		// ★오브젝트 타입별 이벤트
 
 		switch (type)
 		{
@@ -227,6 +230,25 @@ void CGameObject::Tick(float dTime)
 			}
 
 			break;
+
+		case character:
+			if (totalDtime > 0.5)
+			{
+				totalDtime = 0;
+				if (myscene->nObj < Max)
+				{
+					auto d = new  CGameObject(arrow, Pos);
+					d->SetMaster(this);
+					myscene->obj.push_back(d);
+					myscene->nObj += 1;
+				}
+			}
+
+			break;
+
+		case arrow:	//화살은 너무 오래 있을필요는 없다 생각되서 시간이 지나면 사라지도록
+			if (totalDtime > 5)
+				Delobj = true;
 
 
 		}
