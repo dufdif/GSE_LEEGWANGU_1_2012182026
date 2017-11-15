@@ -10,7 +10,6 @@ SimpleGame/.vs/SimpleGame/v15/.suo
 *.db
 *.ipch
 *.ipch
-*.vcxproj
 *.log
 *.filters
 *.tlog
