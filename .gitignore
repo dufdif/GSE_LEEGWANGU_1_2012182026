@@ -4,7 +4,6 @@
 *.exe
 *.obj
 *.pch
-*.vcxproj
 *.db
 SimpleGame/.vs/SimpleGame/v15/.suo
 *.db
