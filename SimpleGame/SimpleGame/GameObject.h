@@ -59,7 +59,7 @@ class CGameObject
 {
 public:
 	CGameObject();
-	CGameObject(Type type,mVector p,  bool t = false,mVector s=mVector(0,0,0));
+	CGameObject(Type type,mVector p,bool enemy,  bool t = false,mVector s=mVector(0,0,0));
 	CGameObject(mVector p, mVector s, Color c, float sz);
 	~CGameObject();
 	CGameObject* Master;
@@ -83,6 +83,8 @@ public:
 	float Damage;
 
 	bool Enemy;
+
+	
 
 	Type type;
 	void SetMaster(CGameObject* m) { Master = m; }

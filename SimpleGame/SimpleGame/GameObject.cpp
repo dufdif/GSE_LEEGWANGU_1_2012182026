@@ -43,16 +43,25 @@ CGameObject::CGameObject(mVector p,mVector s,Color c,float sz)
 }
 
 
-CGameObject::CGameObject(Type t,mVector p, bool te,mVector s)
+CGameObject::CGameObject(Type t,mVector p,bool enemy, bool te,mVector s)
 {
+	Enemy = enemy;
 	Width = 1;
 	Height = 1;
 	type = t;
 	tex = te;
 	if (s.x == s.y == s.z == 0)
 	{
-		Speed.x = rand() % 10 - 5;
-		Speed.y = rand() % 10 - 5;
+		if (Enemy)
+		{
+			Speed.x = rand() % 10 - 5;
+			Speed.y = -5;
+		}
+		else
+		{
+			Speed.x = rand() % 10 - 5;
+			Speed.y = 5;
+		}
 	}
 	else
 		Speed = s;
@@ -76,52 +85,62 @@ CGameObject::CGameObject(Type t,mVector p, bool te,mVector s)
 		Speed.y /= sp;
 
 		Speed = Speed * 300;
-		
-		Col = Color(1, 1, 1, 1);
+		if(Enemy)
+			Col = Color(1, 0, 0, 1);
+		else
+			Col = Color(0, 0, 1, 1);
+
 		orgCol = Col;
-		Damage = 100;
+		Damage = 10;
 		myscene->nCharacter += 1;
-		Enemy = false;
+		
 		break;
 
 	case building:
 		hp = 500;
 		maxhp = hp;
-		size = 50;
+		size = 100;
 		Col = Color(1, 1, 0, 1);
 		orgCol = Col;
 		Speed.x = 0;
 		Speed.y = 0;
-		Damage = 100;
-		Enemy = true;
+		Damage = 500;
+		
 		break;
 
 	case bullet:
 		hp = 5;
 		maxhp = hp;
 		size = 4;
-		Col = Color(1, 0, 0, 1);
+		if(Enemy)
+			Col = Color(1, 0, 0, 1);
+		else
+			Col = Color(0, 0, 1, 1);
 		orgCol = Col;
 		Speed.x /= sp;
 		Speed.y /= sp;
 
 		Speed = Speed * 600;
 
-		Damage = 10;
-		Enemy = true;
+		Damage = 20;
+		
 		break;
 	case arrow:
 		hp = 10;
 		maxhp = hp;
 		size = 4;
-		Col = Color(0, 1, 0, 1);
+
+		if(Enemy)
+			Col = Color(0.5, 0.2, 0.7, 1);
+		else
+			Col = Color(1, 1, 0, 1);
 		orgCol = Col;
 		Speed.x /= sp;
 		Speed.y /= sp;
 
 		Speed = Speed * 300;
 		Damage = 10;
-		Enemy = false;
+		
 		break;
 
 	}
@@ -160,18 +179,18 @@ void CGameObject::Tick(float dTime)
 		}
 
 
-		if (Pos.y > 250)
+		if (Pos.y > 350)
 		{
 			Col.r = 1;
-			Pos.y = 250;
+			Pos.y = 350;
 			Speed.y = -Speed.y;
 			
 		}
 
-		if (Pos.y < -250)
+		if (Pos.y < -350)
 		{
 			Col.r = 1;
-			Pos.y = -250;
+			Pos.y = -350;
 			Speed.y = -Speed.y;
 			
 		}
@@ -184,26 +203,40 @@ void CGameObject::Tick(float dTime)
 
 			if ( type!=(*i)->type )//같은타입이 아니거나 
 			{
-				if (type == arrow && Master!=(*i)  || Enemy != (*i)->Enemy)//타입이 화살일때 
+				if ( Enemy != (*i)->Enemy)//타입이 화살일때 
 					//소유자와 다른 오브젝트거나 서로 적대관계일때
 				{
-
-
+					
+					
 					auto cx = (*i)->Pos.x - Pos.x;
 					auto cy = (*i)->Pos.y - Pos.y;
 					float d = (cx*cx) + (cy*cy);
 					d = sqrt(d);
 					if (d * 2 < size + (*i)->size)
 					{
+						if (type == character &&(*i)->type==building)
+						{ 
+							hp -= (*i)->Damage;
+
+							(*i)->hp -= Damage;
 
 
-						hp -= (*i)->Damage;
+							Col = Color(1, 0, 0, 1);
+							(*i)->Col = Color(1, 0, 0, 1);
+						}
 
-						(*i)->hp -= Damage;
+						if ((type == bullet || type == arrow) && ((*i)->type == character))
+						{
+							hp -= (*i)->Damage;
+
+							(*i)->hp -= Damage;
 
 
-						Col = Color(1, 0, 0, 1);
-						(*i)->Col = Color(1, 0, 0, 1);
+							Col = Color(1, 0, 0, 1);
+							(*i)->Col = Color(1, 0, 0, 1);
+
+						}
+
 
 					}
 				}
@@ -223,21 +256,21 @@ void CGameObject::Tick(float dTime)
 		switch (type)
 		{
 		case building:
-			if (totalDtime > 0.5)
+			if (totalDtime > 10)
 			{
 				totalDtime = 0;
-				myscene->CreateObj(bullet, Pos);
+				myscene->CreateObj(bullet, Pos,this->Enemy);
 			}
 
 			break;
 
 		case character:
-			if (totalDtime > 0.5)
+			if (totalDtime > 3)
 			{
 				totalDtime = 0;
 				if (myscene->nObj < Max)
 				{
-					auto d = new  CGameObject(arrow, Pos);
+					auto d = new  CGameObject(arrow, Pos,this->Enemy);
 					d->SetMaster(this);
 					myscene->obj.push_back(d);
 					myscene->nObj += 1;

@@ -17,6 +17,9 @@ but WITHOUT ANY WARRANTY.
 #include"Scene.h"
 #include<time.h>
 
+bool fireon = true;
+float firetime = 0;
+float enemytime = 0;
 float t = 0;
 Scene* myscene=NULL;
 
@@ -30,7 +33,23 @@ void RenderScene(void)
 
 void Update(float dTime)//매번 모든 오브젝트를 갱신한다.
 {
-
+	if (fireon == false)
+	{
+		firetime += dTime;
+		if (firetime >= 7)
+		{
+			fireon = true;
+			firetime = 0;
+		}
+	}
+	if (enemytime >= 5)
+	{
+		float tx=rand() % 500;
+		float ty = rand() % 400;
+		myscene->CreateObj(character, mVector(tx - 250, ty, 0), true, false);
+		enemytime = 0;
+	}
+	enemytime += dTime;
 	myscene->Tick(dTime);
 	
 }
@@ -61,9 +80,17 @@ void MouseInput(int button, int state, int x, int y)
 			case GLUT_UP:
 				if (click == true)
 				{
-					if(myscene->nCharacter<CharacterMax)
-						myscene->CreateObj(character,mVector(x - 250, 250 - y, 0));
+					//if(myscene->nCharacter<CharacterMax)
+					//	myscene->CreateObj(character,mVector(x - 250, 400 - y, 0),false);
 					
+					if (fireon)
+					{
+						if (400 > y)
+							y = 400;
+						myscene->CreateObj(character, mVector(x - 250, -y +400, 0), false, false);
+						fireon = false;
+
+					}
 					click = false;
 				}
 				break;
@@ -124,7 +151,8 @@ int main(int argc, char **argv)
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
 	glutInitWindowPosition(0, 0);
-	glutInitWindowSize(500, 500);
+	glutInitWindowSize(500, 800);
+	
 	glutCreateWindow("Game Software Engineering KPU");
 
 	glewInit();
@@ -142,8 +170,16 @@ int main(int argc, char **argv)
 	
 	// Initialize Renderer
 	
-	myscene->CreateObj(building, mVector(0, 0, 0),true);
+	//적팀 건물
+	myscene->CreateObj(building, mVector(-150, 300, 0),true,true);
+	myscene->CreateObj(building, mVector(0, 400, 0), true, true);
+	myscene->CreateObj(building, mVector(150, 300, 0), true, true);
 
+
+	//우리팀 건물
+	myscene->CreateObj(building, mVector(-150, -300, 0),false, true);
+	myscene->CreateObj(building, mVector(0, -400, 0), false, true);
+	myscene->CreateObj(building, mVector(150, -300, 0), false, true);
 
 	glutDisplayFunc(RenderScene);
 	glutIdleFunc(Idle);
