@@ -138,7 +138,7 @@ CGameObject::CGameObject(Type t,mVector p,bool enemy, bool te,mVector s)
 		Speed.x /= sp;
 		Speed.y /= sp;
 
-		Speed = Speed * 300;
+		Speed = Speed * 100;
 		Damage = 10;
 		
 		break;
@@ -179,18 +179,18 @@ void CGameObject::Tick(float dTime)
 		}
 
 
-		if (Pos.y > 350)
+		if (Pos.y > 400)
 		{
 			Col.r = 1;
-			Pos.y = 350;
+			Pos.y = 400;
 			Speed.y = -Speed.y;
 			
 		}
 
-		if (Pos.y < -350)
+		if (Pos.y < -400)
 		{
 			Col.r = 1;
-			Pos.y = -350;
+			Pos.y = -400;
 			Speed.y = -Speed.y;
 			
 		}
@@ -214,7 +214,7 @@ void CGameObject::Tick(float dTime)
 					d = sqrt(d);
 					if (d * 2 < size + (*i)->size)
 					{
-						if (( type == character || type == arrow) &&(*i)->type==building)
+						if ( type !=building &&(*i)->type==building)
 						{ 
 							hp -= (*i)->Damage;
 
@@ -279,9 +279,9 @@ void CGameObject::Tick(float dTime)
 
 			break;
 
-		case arrow:	//화살은 너무 오래 있을필요는 없다 생각되서 시간이 지나면 사라지도록
-			if (totalDtime > 5)
-				Delobj = true;
+		case arrow:	
+			break;
+			
 
 
 		}

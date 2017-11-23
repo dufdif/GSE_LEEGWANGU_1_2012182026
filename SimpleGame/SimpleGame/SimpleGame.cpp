@@ -172,13 +172,13 @@ int main(int argc, char **argv)
 	
 	//ÀûÆÀ °Ç¹°
 	myscene->CreateObj(building, mVector(-150, 300, 0),true,true);
-	myscene->CreateObj(building, mVector(0, 400, 0), true, true);
+	myscene->CreateObj(building, mVector(0, 350, 0), true, true);
 	myscene->CreateObj(building, mVector(150, 300, 0), true, true);
 
 
 	//¿ì¸®ÆÀ °Ç¹°
 	myscene->CreateObj(building, mVector(-150, -300, 0),false, true);
-	myscene->CreateObj(building, mVector(0, -400, 0), false, true);
+	myscene->CreateObj(building, mVector(0, -350, 0), false, true);
 	myscene->CreateObj(building, mVector(150, -300, 0), false, true);
 
 	glutDisplayFunc(RenderScene);
