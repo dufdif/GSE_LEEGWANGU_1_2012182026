@@ -83,7 +83,7 @@ CGameObject::CGameObject(Type t,mVector p,bool enemy, bool te,mVector s)
 		
 		Speed.x /= sp;
 		Speed.y /= sp;
-
+		totalDtime = 10;
 		Speed = Speed * 300;
 		if(Enemy)
 			Col = Color(1, 0, 0, 1);
@@ -129,7 +129,7 @@ CGameObject::CGameObject(Type t,mVector p,bool enemy, bool te,mVector s)
 		hp = 10;
 		maxhp = hp;
 		size = 4;
-
+		
 		if(Enemy)
 			Col = Color(0.5, 0.2, 0.7, 1);
 		else
@@ -214,7 +214,7 @@ void CGameObject::Tick(float dTime)
 					d = sqrt(d);
 					if (d * 2 < size + (*i)->size)
 					{
-						if (type == character &&(*i)->type==building)
+						if (( type == character || type == arrow) &&(*i)->type==building)
 						{ 
 							hp -= (*i)->Damage;
 
