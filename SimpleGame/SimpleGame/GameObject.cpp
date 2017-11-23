@@ -77,9 +77,9 @@ CGameObject::CGameObject(Type t,mVector p,bool enemy, bool te,mVector s)
 	switch (t)
 	{
 	case character:
-		hp = 10;
+		hp = 100;
 		maxhp = hp;
-		size = 10;
+		size = 30;
 		
 		Speed.x /= sp;
 		Speed.y /= sp;
@@ -93,23 +93,23 @@ CGameObject::CGameObject(Type t,mVector p,bool enemy, bool te,mVector s)
 		orgCol = Col;
 		Damage = 10;
 		myscene->nCharacter += 1;
-		
+		Level = 0.2;
 		break;
 
 	case building:
 		hp = 500;
 		maxhp = hp;
 		size = 100;
-		Col = Color(1, 1, 0, 1);
+		Col = Color(1, 1, 1, 1);
 		orgCol = Col;
 		Speed.x = 0;
 		Speed.y = 0;
 		Damage = 500;
-		
+		Level = 0.1;
 		break;
 
 	case bullet:
-		hp = 5;
+		hp = 15;
 		maxhp = hp;
 		size = 4;
 		if(Enemy)
@@ -119,10 +119,10 @@ CGameObject::CGameObject(Type t,mVector p,bool enemy, bool te,mVector s)
 		orgCol = Col;
 		Speed.x /= sp;
 		Speed.y /= sp;
-
+		Level = 0.3;
 		Speed = Speed * 600;
 
-		Damage = 20;
+		Damage = 15;
 		
 		break;
 	case arrow:
@@ -140,7 +140,7 @@ CGameObject::CGameObject(Type t,mVector p,bool enemy, bool te,mVector s)
 
 		Speed = Speed * 100;
 		Damage = 10;
-		
+		Level = 0.3;
 		break;
 
 	}
@@ -164,37 +164,65 @@ void CGameObject::Tick(float dTime)
 	{
 		Pos = Pos + Speed*dTime;
 		// *-------------------------- 벽과의 충돌------------------------------*
-		if (Pos.x > 250)
+
+		if (type == character)
 		{
-			Col.r = 1;
-			Speed.x = -Speed.x;
-			Pos.x = 250;
-		}
+			if (Pos.x > 250)
+			{
+				Col.r = 1;
+				Speed.x = -Speed.x;
+				Pos.x = 250;
+			}
 
-		if (Pos.x < -250)
+			if (Pos.x < -250)
+			{
+				Col.r = 1;
+				Speed.x = -Speed.x;
+				Pos.x = -250;
+			}
+
+
+			if (Pos.y > 400)
+			{
+				Col.r = 1;
+				Pos.y = 400;
+				Speed.y = -Speed.y;
+
+			}
+
+			if (Pos.y < -400)
+			{
+				Col.r = 1;
+				Pos.y = -400;
+				Speed.y = -Speed.y;
+
+			}
+		}
+		else
 		{
-			Col.r = 1;
-			Speed.x = -Speed.x;
-			Pos.x = -250;
+
+			if (Pos.x > 250)
+			{
+				Delobj = true;
+			}
+
+			if (Pos.x < -250)
+			{
+				Delobj = true;
+			}
+
+
+			if (Pos.y > 400)
+			{
+				Delobj = true;
+			}
+
+			if (Pos.y < -400)
+			{
+				Delobj = true;
+
+			}
 		}
-
-
-		if (Pos.y > 400)
-		{
-			Col.r = 1;
-			Pos.y = 400;
-			Speed.y = -Speed.y;
-			
-		}
-
-		if (Pos.y < -400)
-		{
-			Col.r = 1;
-			Pos.y = -400;
-			Speed.y = -Speed.y;
-			
-		}
-
 		//---------------------------------------------------------------------
 
 		//오브젝트 끼리 충돌
@@ -216,9 +244,11 @@ void CGameObject::Tick(float dTime)
 					{
 						if ( type !=building &&(*i)->type==building)
 						{ 
-							hp -= (*i)->Damage;
+							float h1 = hp;
+							float h2 = (*i)->hp;
+							hp -= h2;
 
-							(*i)->hp -= Damage;
+							(*i)->hp -= h1;
 
 
 							Col = Color(1, 0, 0, 1);
@@ -227,9 +257,12 @@ void CGameObject::Tick(float dTime)
 
 						if ((type == bullet || type == arrow) && ((*i)->type == character))
 						{
-							hp -= (*i)->Damage;
+							float h1 = hp;
+							float h2 = (*i)->hp;
 
-							(*i)->hp -= Damage;
+							hp -= h2;
+
+							(*i)->hp -= h1;
 
 
 							Col = Color(1, 0, 0, 1);
@@ -256,7 +289,7 @@ void CGameObject::Tick(float dTime)
 		switch (type)
 		{
 		case building:
-			if (totalDtime > 10)
+			if (totalDtime > 3)
 			{
 				totalDtime = 0;
 				myscene->CreateObj(bullet, Pos,this->Enemy);
@@ -265,7 +298,7 @@ void CGameObject::Tick(float dTime)
 			break;
 
 		case character:
-			if (totalDtime > 3)
+			if (totalDtime >1)
 			{
 				totalDtime = 0;
 				if (myscene->nObj < Max)

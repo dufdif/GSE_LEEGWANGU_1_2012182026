@@ -1,4 +1,9 @@
 #pragma once
+#define LEVEL_GOD 0
+#define LEVEL_SKY 0.1
+#define LEVEL_GROUND 0.2
+#define LEVEL_UNDERGROUND 0.3
+
 typedef struct mVector
 {
 	float x = 0;
@@ -50,6 +55,8 @@ typedef struct Color
 
 }Color;
 
+
+
 enum Type
 {
 	character,building,bullet,arrow
@@ -58,13 +65,14 @@ enum Type
 class CGameObject
 {
 public:
+	float Level;//깊이
 	CGameObject();
 	CGameObject(Type type,mVector p,bool enemy,  bool t = false,mVector s=mVector(0,0,0));
 	CGameObject(mVector p, mVector s, Color c, float sz);
 	~CGameObject();
 	CGameObject* Master;
-	int hp;
-	int maxhp;
+	float hp;
+	float maxhp;
 	void Tick(float dtime);
 	mVector Pos;//위치 정보
 	Color Col;//컬러 값.

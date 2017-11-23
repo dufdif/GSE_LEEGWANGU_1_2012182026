@@ -30,12 +30,31 @@ void Scene::RenderScene(void)
 	{	
 		if ((*i)->tex == true)
 			if((*i)->Enemy)
-				g_Renderer->DrawTexturedRect((*i)->Pos.x, (*i)->Pos.y, (*i)->Pos.z, (*i)->size, (*i)->Col.r, (*i)->Col.g, (*i)->Col.b, (*i)->Col.a, testTexture);
+				g_Renderer->DrawTexturedRect((*i)->Pos.x, (*i)->Pos.y, (*i)->Pos.z, (*i)->size, (*i)->Col.r, (*i)->Col.g, (*i)->Col.b, (*i)->Col.a, testTexture,(*i)->Level);
 			else
-				g_Renderer->DrawTexturedRect((*i)->Pos.x, (*i)->Pos.y, (*i)->Pos.z, (*i)->size, (*i)->Col.r, (*i)->Col.g, (*i)->Col.b, (*i)->Col.a, testTexture2);
+				g_Renderer->DrawTexturedRect((*i)->Pos.x, (*i)->Pos.y, (*i)->Pos.z, (*i)->size, (*i)->Col.r, (*i)->Col.g, (*i)->Col.b, (*i)->Col.a, testTexture2, (*i)->Level);
 		else
-			g_Renderer->DrawSolidRect((*i)->Pos.x, (*i)->Pos.y, (*i)->Pos.z, (*i)->size, (*i)->Col.r, (*i)->Col.g, (*i)->Col.b, (*i)->Col.a);
+			g_Renderer->DrawSolidRect((*i)->Pos.x, (*i)->Pos.y, (*i)->Pos.z, (*i)->size, (*i)->Col.r, (*i)->Col.g, (*i)->Col.b, (*i)->Col.a, (*i)->Level);
+
+		if ((*i)->type == building )
+		{
+			if ((*i)->Enemy == true)
+				g_Renderer->DrawSolidRectGauge((*i)->Pos.x, (*i)->Pos.y+55, (*i)->Pos.z, (*i)->size, 4, 1, 0, 0, 1, (*i)->hp / (*i)->maxhp, 0.2);
+			else
+				g_Renderer->DrawSolidRectGauge((*i)->Pos.x, (*i)->Pos.y+55, (*i)->Pos.z, (*i)->size, 4, 0, 0, 1, 1, (*i)->hp / (*i)->maxhp, 0.2);
+		}
+		if ((*i)->type == character)
+		{
+			if ((*i)->Enemy == true)
+				g_Renderer->DrawSolidRectGauge((*i)->Pos.x, (*i)->Pos.y + 20, (*i)->Pos.z, (*i)->size, 2, 1, 0, 0, 1, (*i)->hp / (*i)->maxhp, 0.2);
+			else
+				g_Renderer->DrawSolidRectGauge((*i)->Pos.x, (*i)->Pos.y + 20, (*i)->Pos.z, (*i)->size, 2, 0, 0, 1, 1, (*i)->hp / (*i)->maxhp, 0.2);
+
+		}
+
 	}
+
+	
 
 }
 

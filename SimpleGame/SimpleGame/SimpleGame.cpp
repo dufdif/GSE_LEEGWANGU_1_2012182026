@@ -36,13 +36,13 @@ void Update(float dTime)//매번 모든 오브젝트를 갱신한다.
 	if (fireon == false)
 	{
 		firetime += dTime;
-		if (firetime >= 7)
+		if (firetime >= 1)
 		{
 			fireon = true;
 			firetime = 0;
 		}
 	}
-	if (enemytime >= 5)
+	if (enemytime >= 3)
 	{
 		float tx=rand() % 500;
 		float ty = rand() % 400;
@@ -172,13 +172,13 @@ int main(int argc, char **argv)
 	
 	//적팀 건물
 	myscene->CreateObj(building, mVector(-150, 300, 0),true,true);
-	myscene->CreateObj(building, mVector(0, 350, 0), true, true);
+	myscene->CreateObj(building, mVector(0, 320, 0), true, true);
 	myscene->CreateObj(building, mVector(150, 300, 0), true, true);
 
 
 	//우리팀 건물
 	myscene->CreateObj(building, mVector(-150, -300, 0),false, true);
-	myscene->CreateObj(building, mVector(0, -350, 0), false, true);
+	myscene->CreateObj(building, mVector(0, -320, 0), false, true);
 	myscene->CreateObj(building, mVector(150, -300, 0), false, true);
 
 	glutDisplayFunc(RenderScene);
