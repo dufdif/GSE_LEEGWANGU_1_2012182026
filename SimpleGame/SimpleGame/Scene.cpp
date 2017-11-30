@@ -3,6 +3,14 @@
 
 GLuint testTexture = 0;//적팀
 GLuint testTexture2 = 0;//우리팀
+GLuint background = 0;//배경
+
+GLuint anitex1 = 0;//적유닛
+GLuint anitex2 = 0;//아군유닛
+
+GLuint ptex1 = 0;//파티클
+GLuint ptex2 = 0;//파티클2
+
 
 Scene::Scene()
 {
@@ -11,6 +19,11 @@ Scene::Scene()
 
 	testTexture = g_Renderer->CreatePngTexture(".\\Texture\\Unit2.png");
 	testTexture2 = g_Renderer->CreatePngTexture(".\\Texture\\Unit1.png");
+	background= g_Renderer->CreatePngTexture(".\\Texture\\background.png");
+	anitex1 = g_Renderer->CreatePngTexture(".\\Texture\\a1.png");
+	anitex2 = g_Renderer->CreatePngTexture(".\\Texture\\a2.png");
+	ptex1= g_Renderer->CreatePngTexture(".\\Texture\\p1.png");
+	ptex2 = g_Renderer->CreatePngTexture(".\\Texture\\p2.png");
 
 	if (!g_Renderer->IsInitialized())
 	{
@@ -26,16 +39,28 @@ void Scene::RenderScene(void)
 
 
 	// Renderer Test
+
+	//배경그리기
+	g_Renderer->DrawTexturedRect(0, 0,0 , 800, 1, 1, 1, 1, background,0.9);
 	for (auto i = obj.begin(); i != obj.end(); ++i)
 	{	
 		if ((*i)->tex == true)
-			if((*i)->Enemy)
-				g_Renderer->DrawTexturedRect((*i)->Pos.x, (*i)->Pos.y, (*i)->Pos.z, (*i)->size, (*i)->Col.r, (*i)->Col.g, (*i)->Col.b, (*i)->Col.a, testTexture,(*i)->Level);
+			if ((*i)->Enemy)
+				g_Renderer->DrawTexturedRect((*i)->Pos.x, (*i)->Pos.y, (*i)->Pos.z, (*i)->size, (*i)->Col.r, (*i)->Col.g, (*i)->Col.b, (*i)->Col.a, testTexture, (*i)->Level);
 			else
 				g_Renderer->DrawTexturedRect((*i)->Pos.x, (*i)->Pos.y, (*i)->Pos.z, (*i)->size, (*i)->Col.r, (*i)->Col.g, (*i)->Col.b, (*i)->Col.a, testTexture2, (*i)->Level);
+		else if ((*i)->type == character)
+			if ((*i)->Enemy)
+				g_Renderer->DrawTexturedRectSeq((*i)->Pos.x, (*i)->Pos.y, (*i)->Pos.z, (*i)->size, 1, 1, 1, 1, anitex1, (*i)->curanim, 0, (*i)->maxanim, 1, (*i)->Level);
+			else
+				g_Renderer->DrawTexturedRectSeq((*i)->Pos.x, (*i)->Pos.y, (*i)->Pos.z, (*i)->size, 1, 1, 1, 1, anitex2, (*i)->curanim, 0, (*i)->maxanim, 1, (*i)->Level);
+		else if ((*i)->type == bullet)
+			if ((*i)->Enemy)
+				g_Renderer->DrawParticle((*i)->Pos.x, (*i)->Pos.y, (*i)->Pos.z, (*i)->size, 1, 1, 1, 1, 0, 1, ptex1, (*i)->particletime);
+			else
+				g_Renderer->DrawParticle((*i)->Pos.x, (*i)->Pos.y, (*i)->Pos.z, (*i)->size, 1, 1, 1, 1, 0, -1, ptex2, (*i)->particletime);
 		else
-			g_Renderer->DrawSolidRect((*i)->Pos.x, (*i)->Pos.y, (*i)->Pos.z, (*i)->size, (*i)->Col.r, (*i)->Col.g, (*i)->Col.b, (*i)->Col.a, (*i)->Level);
-
+			g_Renderer->DrawSolidRect((*i)->Pos.x, (*i)->Pos.y, (*i)->Pos.z, (*i)->size, (*i)->Col.r, (*i)->Col.g, (*i)->Col.b, (*i)->Col.a,(*i)->Level);
 		if ((*i)->type == building )
 		{
 			if ((*i)->Enemy == true)

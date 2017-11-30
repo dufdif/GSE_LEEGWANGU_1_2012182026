@@ -70,6 +70,11 @@ public:
 	CGameObject(Type type,mVector p,bool enemy,  bool t = false,mVector s=mVector(0,0,0));
 	CGameObject(mVector p, mVector s, Color c, float sz);
 	~CGameObject();
+	int curanim = 0;
+	int maxanim = 0;
+	float anitime = 0;
+	float particletime = 0;
+
 	CGameObject* Master;
 	float hp;
 	float maxhp;

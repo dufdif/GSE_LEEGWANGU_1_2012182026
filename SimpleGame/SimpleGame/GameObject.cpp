@@ -79,21 +79,30 @@ CGameObject::CGameObject(Type t,mVector p,bool enemy, bool te,mVector s)
 	case character:
 		hp = 100;
 		maxhp = hp;
-		size = 30;
+		size = 60;
 		
 		Speed.x /= sp;
 		Speed.y /= sp;
 		totalDtime = 10;
 		Speed = Speed * 300;
-		if(Enemy)
+		if (Enemy)
+		{
 			Col = Color(1, 0, 0, 1);
+			maxanim =23;
+			anitime = 0.5 / maxanim;
+		}
 		else
+		{
 			Col = Color(0, 0, 1, 1);
-
+			maxanim = 3;
+			anitime = 0.5 / maxanim;
+		}
 		orgCol = Col;
 		Damage = 10;
 		myscene->nCharacter += 1;
 		Level = 0.2;
+		curanim = 0;
+		
 		break;
 
 	case building:
@@ -111,7 +120,7 @@ CGameObject::CGameObject(Type t,mVector p,bool enemy, bool te,mVector s)
 	case bullet:
 		hp = 15;
 		maxhp = hp;
-		size = 4;
+		size = 3;
 		if(Enemy)
 			Col = Color(1, 0, 0, 1);
 		else
@@ -128,7 +137,7 @@ CGameObject::CGameObject(Type t,mVector p,bool enemy, bool te,mVector s)
 	case arrow:
 		hp = 10;
 		maxhp = hp;
-		size = 4;
+		size = 7;
 		
 		if(Enemy)
 			Col = Color(0.5, 0.2, 0.7, 1);
@@ -298,8 +307,21 @@ void CGameObject::Tick(float dTime)
 			break;
 
 		case character:
-			if (totalDtime >1)
+			if (anitime > 0.1 / maxanim)
 			{
+				anitime = 0;
+				if (curanim < maxanim)
+					curanim += 1;
+				else
+					curanim = 0;
+
+
+			}
+			else
+				anitime += dTime;
+			if (totalDtime >0.45)
+			{
+				
 				totalDtime = 0;
 				if (myscene->nObj < Max)
 				{
@@ -315,6 +337,9 @@ void CGameObject::Tick(float dTime)
 		case arrow:	
 			break;
 			
+		case bullet:
+			particletime += dTime;
+			break;
 
 
 		}
