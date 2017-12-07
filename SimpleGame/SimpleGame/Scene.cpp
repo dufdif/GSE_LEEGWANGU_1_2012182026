@@ -39,7 +39,7 @@ void Scene::RenderScene(void)
 
 
 	// Renderer Test
-
+	
 	//배경그리기
 	g_Renderer->DrawTexturedRect(0, 0,0 , 800, 1, 1, 1, 1, background,0.9);
 	for (auto i = obj.begin(); i != obj.end(); ++i)
@@ -78,7 +78,7 @@ void Scene::RenderScene(void)
 		}
 
 	}
-
+	g_Renderer->DrawText(0, 0, GLUT_BITMAP_HELVETICA_12, 1, 1, 1, "12345678");
 	
 
 }

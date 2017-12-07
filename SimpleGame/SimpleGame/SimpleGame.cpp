@@ -16,6 +16,7 @@ but WITHOUT ANY WARRANTY.
 #include "Renderer.h"
 #include"Scene.h"
 #include<time.h>
+#include"Sound.h"
 
 bool fireon = true;
 float firetime = 0;
@@ -164,7 +165,16 @@ int main(int argc, char **argv)
 	{
 		std::cout << "GLEW 3.0 not supported\n ";
 	}
+
 	myscene = new Scene;
+	
+	
+	
+
+	auto m_sound = new Sound();
+	auto soundBG = m_sound->CreateSound(".\Dependencies\SoundSamples\MF-W-90.XM");
+
+	m_sound->PlaySound(soundBG, true, 0.2f);
 
 	//오브젝트 생성
 	
@@ -174,12 +184,15 @@ int main(int argc, char **argv)
 	myscene->CreateObj(building, mVector(-150, 300, 0),true,true);
 	myscene->CreateObj(building, mVector(0, 320, 0), true, true);
 	myscene->CreateObj(building, mVector(150, 300, 0), true, true);
-
+	
 
 	//우리팀 건물
 	myscene->CreateObj(building, mVector(-150, -300, 0),false, true);
 	myscene->CreateObj(building, mVector(0, -320, 0), false, true);
 	myscene->CreateObj(building, mVector(150, -300, 0), false, true);
+
+
+	
 
 	glutDisplayFunc(RenderScene);
 	glutIdleFunc(Idle);
