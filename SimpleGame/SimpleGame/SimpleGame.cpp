@@ -172,7 +172,7 @@ int main(int argc, char **argv)
 	
 
 	auto m_sound = new Sound();
-	auto soundBG = m_sound->CreateSound(".\Dependencies\SoundSamples\MF-W-90.XM");
+	auto soundBG = m_sound->CreateSound("./Dependencies/SoundSamples/MF-W-90.XM");
 
 	m_sound->PlaySound(soundBG, true, 0.2f);
 
