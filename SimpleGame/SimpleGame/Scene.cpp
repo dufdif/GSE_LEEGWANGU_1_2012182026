@@ -10,7 +10,7 @@ GLuint anitex2 = 0;//아군유닛
 
 GLuint ptex1 = 0;//파티클
 GLuint ptex2 = 0;//파티클2
-
+GLuint star=0;
 
 Scene::Scene()
 {
@@ -24,7 +24,7 @@ Scene::Scene()
 	anitex2 = g_Renderer->CreatePngTexture(".\\Texture\\a2.png");
 	ptex1= g_Renderer->CreatePngTexture(".\\Texture\\p1.png");
 	ptex2 = g_Renderer->CreatePngTexture(".\\Texture\\p2.png");
-
+	star = g_Renderer->CreateBmpTexture(".\\Texture\\star.bmp");
 	if (!g_Renderer->IsInitialized())
 	{
 		std::cout << "Renderer could not be initialized.. \n";
@@ -32,7 +32,7 @@ Scene::Scene()
 
 }
 
-void Scene::RenderScene(void)
+void Scene::RenderScene(float dtime)
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glClearColor(0.0f, 0.3f, 0.3f, 1.0f);
@@ -55,10 +55,21 @@ void Scene::RenderScene(void)
 			else
 				g_Renderer->DrawTexturedRectSeq((*i)->Pos.x, (*i)->Pos.y, (*i)->Pos.z, (*i)->size, 1, 1, 1, 1, anitex2, (*i)->curanim, 0, (*i)->maxanim, 1, (*i)->Level);
 		else if ((*i)->type == bullet)
+		{
+			auto px = (*i)->Speed.x;
+			auto py = (*i)->Speed.y;
+
+			float l = sqrt(px*px + py*py);
+			px /= l;
+			py /= l;
+			px *= 0.5;
+			py *= 0.5;
+
 			if ((*i)->Enemy)
-				g_Renderer->DrawParticle((*i)->Pos.x, (*i)->Pos.y, (*i)->Pos.z, (*i)->size, 1, 1, 1, 1, 0, 1, ptex1, (*i)->particletime);
+				g_Renderer->DrawParticle((*i)->Pos.x, (*i)->Pos.y, (*i)->Pos.z, (*i)->size, 1, 0.35, 0.5, 1, -px, -py, ptex1, (*i)->particletime, 0.3);
 			else
-				g_Renderer->DrawParticle((*i)->Pos.x, (*i)->Pos.y, (*i)->Pos.z, (*i)->size, 1, 1, 1, 1, 0, -1, ptex2, (*i)->particletime);
+				g_Renderer->DrawParticle((*i)->Pos.x, (*i)->Pos.y, (*i)->Pos.z, (*i)->size, 0.1, 1, 0.6, 1, -px, -py, ptex2, (*i)->particletime, 0.3);
+		}
 		else
 			g_Renderer->DrawSolidRect((*i)->Pos.x, (*i)->Pos.y, (*i)->Pos.z, (*i)->size, (*i)->Col.r, (*i)->Col.g, (*i)->Col.b, (*i)->Col.a,(*i)->Level);
 		if ((*i)->type == building )
@@ -78,7 +89,9 @@ void Scene::RenderScene(void)
 		}
 
 	}
-	g_Renderer->DrawText(0, 0, GLUT_BITMAP_HELVETICA_12, 1, 1, 1, "12345678");
+	g_Renderer->DrawParticleClimate(0, 0, 0, 1, 1, 1, 1, 1, 0, 0, star, dtime, 0.5);
+	
+	//g_Renderer->DrawText(0, 0, GLUT_BITMAP_HELVETICA_12, 1, 1, 1, "12345678");
 	
 
 }
@@ -87,7 +100,6 @@ void Scene::RenderScene(void)
 void Scene::Tick(float dtime)
 {
 	
-
 	for (auto i = obj.begin();i!=obj.end() ;i++)
 		(*i)->Tick(dtime);
 	DeleteObj();

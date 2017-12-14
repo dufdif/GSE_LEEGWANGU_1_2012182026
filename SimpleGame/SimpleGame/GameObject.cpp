@@ -2,6 +2,9 @@
 #include "GameObject.h"
 #include<time.h>
 #include"Scene.h"
+#include<timeapi.h>
+#include<iostream>
+using namespace std;
 extern Scene* myscene;
 CGameObject::CGameObject()
 {
@@ -54,20 +57,41 @@ CGameObject::CGameObject(Type t,mVector p,bool enemy, bool te,mVector s)
 	{
 		if (Enemy)
 		{
-			Speed.x = rand() % 10 - 5;
-			Speed.y = -5;
+			srand(timeGetTime());
+			if (type != character)
+			{
+				Speed.x = rand() % 10 - 5;
+				Speed.y = -5;
+			}
+			else
+			{
+				Speed.x = rand() % 5 - 2.5;
+				Speed.y = -0.25;
+
+			}
 		}
 		else
 		{
-			Speed.x = rand() % 10 - 5;
-			Speed.y = 5;
+			if (type != character)
+			{
+				Speed.x = rand() % 5 - 2.5;
+				Speed.y = 5;
+
+			}
+			else
+			{
+				Speed.x = rand() % 5 - 2.5;
+				Speed.y = 0.25;
+
+			}
+
 		}
 	}
 	else
 		Speed = s;
 	
 
-	auto sp = sqrt((Speed.x*Speed.x) + (Speed.y*Speed.y));
+	auto sp = sqrt((Speed.x*Speed.x) + (Speed.y*Speed.y)) * 3;
 
 	if (sp == 0)
 	{
@@ -196,6 +220,7 @@ void CGameObject::Tick(float dTime)
 				Col.r = 1;
 				Pos.y = 400;
 				Speed.y = -Speed.y;
+				Speed.x = rand() % 10 - 5;
 
 			}
 
@@ -204,6 +229,7 @@ void CGameObject::Tick(float dTime)
 				Col.r = 1;
 				Pos.y = -400;
 				Speed.y = -Speed.y;
+				Speed.x = rand() % 10 - 5;
 
 			}
 		}
@@ -257,7 +283,17 @@ void CGameObject::Tick(float dTime)
 							float h2 = (*i)->hp;
 							hp -= h2;
 
-							(*i)->hp -= h1;
+							if(type!=character)//캐릭터가 아니면 그냥 체력을깎지만
+								(*i)->hp -= h1;
+							else//캐릭터면 현재 속도에 비례해서 깎아버림
+							{
+								auto px = Speed.x;
+								auto py = Speed.y;
+
+								float l = sqrt(px*px + py*py);
+								(*i)->hp -= l*0.7;
+
+							}
 
 
 							Col = Color(1, 0, 0, 1);
@@ -271,8 +307,10 @@ void CGameObject::Tick(float dTime)
 
 							hp -= h2;
 
-							(*i)->hp -= h1;
-
+							if ((*i)->hp > (*i)->maxhp / 2)
+								(*i)->hp -= h1;
+							else
+								(*i)->hp -= h1 / 2;
 
 							Col = Color(1, 0, 0, 1);
 							(*i)->Col = Color(1, 0, 0, 1);
@@ -298,7 +336,7 @@ void CGameObject::Tick(float dTime)
 		switch (type)
 		{
 		case building:
-			if (totalDtime > 3)
+			if (totalDtime > 1.5)
 			{
 				totalDtime = 0;
 				myscene->CreateObj(bullet, Pos,this->Enemy);
@@ -307,6 +345,17 @@ void CGameObject::Tick(float dTime)
 			break;
 
 		case character:
+
+			if (maxhp / 2 >= hp)
+			{
+				Speed.x = rand() % 10 - 5;
+				if(Enemy)
+					Speed.y = Speed.y-accel*dTime;
+				else
+					Speed.y = Speed.y + accel*dTime;
+
+			}
+
 			if (anitime > 0.1 / maxanim)
 			{
 				anitime = 0;
@@ -319,7 +368,7 @@ void CGameObject::Tick(float dTime)
 			}
 			else
 				anitime += dTime;
-			if (totalDtime >0.45)
+			if (totalDtime >0.8)
 			{
 				
 				totalDtime = 0;

@@ -74,7 +74,7 @@ public:
 	int maxanim = 0;
 	float anitime = 0;
 	float particletime = 0;
-
+	float accel = 100;
 	CGameObject* Master;
 	float hp;
 	float maxhp;

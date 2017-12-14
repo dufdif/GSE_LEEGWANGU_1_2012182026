@@ -22,13 +22,14 @@ bool fireon = true;
 float firetime = 0;
 float enemytime = 0;
 float t = 0;
+float deltatime = 0;
 Scene* myscene=NULL;
 
 auto Time = clock();
 
-void RenderScene(void)
+void RenderScene()
 {
-	myscene->RenderScene();
+	myscene->RenderScene(deltatime);
 	
 }
 
@@ -58,6 +59,7 @@ void Update(float dTime)//매번 모든 오브젝트를 갱신한다.
 void Idle(void)
 {
 	float dtime = clock() - Time;
+	deltatime += dtime/1000;
 	Time +=dtime;
 	//t += dtime;
 	
@@ -171,10 +173,10 @@ int main(int argc, char **argv)
 	
 	
 
-	auto m_sound = new Sound();
-	auto soundBG = m_sound->CreateSound("./Dependencies/SoundSamples/MF-W-90.XM");
+//	auto m_sound = new Sound();
+//	auto soundBG = m_sound->CreateSound("./Dependencies/SoundSamples/MF-W-90.XM");
 
-	m_sound->PlaySound(soundBG, true, 0.2f);
+//	m_sound->PlaySound(soundBG, true, 0.2f);
 
 	//오브젝트 생성
 	

@@ -28,6 +28,6 @@ public:
 	void Tick(float dtime = 0);
 
 
-	void RenderScene(void);
+	void RenderScene(float dtime);
 };
 
