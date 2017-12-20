@@ -362,8 +362,9 @@ void CGameObject::Tick(float dTime)
 				if (curanim < maxanim)
 					curanim += 1;
 				else
+				{
 					curanim = 0;
-
+				}
 
 			}
 			else
@@ -395,6 +396,37 @@ void CGameObject::Tick(float dTime)
 
 	}
 	else
-		Delobj = true;
+		if(type!=character)
+			Delobj = true;
+		else
+		{
+			if (cdeath == false)
+			{
+				curanim = 0;
+				maxanim = 7;
+				cdeath = true;
+			}
+			if (anitime > 0.1 / maxanim)
+			{
+				anitime = 0;
+				if (curanim < maxanim)
+					curanim += 1;
+				else
+				{
+					curanim = 0;
+					if (cdeath == true)
+						Delobj = true;
+				}
+
+			}
+			else
+				anitime += dTime;
+
+
+
+
+		}
+
+		
 }
 

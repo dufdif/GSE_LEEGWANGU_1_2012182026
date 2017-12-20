@@ -8,6 +8,8 @@ GLuint background = 0;//배경
 GLuint anitex1 = 0;//적유닛
 GLuint anitex2 = 0;//아군유닛
 
+GLuint Bomb = 0;//폭발효과
+
 GLuint ptex1 = 0;//파티클
 GLuint ptex2 = 0;//파티클2
 GLuint star=0;
@@ -22,6 +24,7 @@ Scene::Scene()
 	background= g_Renderer->CreatePngTexture(".\\Texture\\background.png");
 	anitex1 = g_Renderer->CreatePngTexture(".\\Texture\\a1.png");
 	anitex2 = g_Renderer->CreatePngTexture(".\\Texture\\a2.png");
+	Bomb = g_Renderer->CreatePngTexture(".\\Texture\\bomb.png");
 	ptex1= g_Renderer->CreatePngTexture(".\\Texture\\p1.png");
 	ptex2 = g_Renderer->CreatePngTexture(".\\Texture\\p2.png");
 	star = g_Renderer->CreateBmpTexture(".\\Texture\\star.bmp");
@@ -50,10 +53,18 @@ void Scene::RenderScene(float dtime)
 			else
 				g_Renderer->DrawTexturedRect((*i)->Pos.x, (*i)->Pos.y, (*i)->Pos.z, (*i)->size, (*i)->Col.r, (*i)->Col.g, (*i)->Col.b, (*i)->Col.a, testTexture2, (*i)->Level);
 		else if ((*i)->type == character)
-			if ((*i)->Enemy)
-				g_Renderer->DrawTexturedRectSeq((*i)->Pos.x, (*i)->Pos.y, (*i)->Pos.z, (*i)->size, 1, 1, 1, 1, anitex1, (*i)->curanim, 0, (*i)->maxanim, 1, (*i)->Level);
+		{
+			if ((*i)->cdeath == false)
+			{
+				if ((*i)->Enemy)
+					g_Renderer->DrawTexturedRectSeq((*i)->Pos.x, (*i)->Pos.y, (*i)->Pos.z, (*i)->size, 1, 1, 1, 1, anitex1, (*i)->curanim, 0, (*i)->maxanim, 1, (*i)->Level);
+				else
+					g_Renderer->DrawTexturedRectSeq((*i)->Pos.x, (*i)->Pos.y, (*i)->Pos.z, (*i)->size, 1, 1, 1, 1, anitex2, (*i)->curanim, 0, (*i)->maxanim, 1, (*i)->Level);
+
+			}
 			else
-				g_Renderer->DrawTexturedRectSeq((*i)->Pos.x, (*i)->Pos.y, (*i)->Pos.z, (*i)->size, 1, 1, 1, 1, anitex2, (*i)->curanim, 0, (*i)->maxanim, 1, (*i)->Level);
+				g_Renderer->DrawTexturedRectSeq((*i)->Pos.x, (*i)->Pos.y, (*i)->Pos.z, (*i)->size, 1, 1, 1, 1, Bomb, (*i)->curanim, 0, (*i)->maxanim, 1, (*i)->Level);
+		}
 		else if ((*i)->type == bullet)
 		{
 			auto px = (*i)->Speed.x;

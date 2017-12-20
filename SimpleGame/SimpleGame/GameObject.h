@@ -65,6 +65,7 @@ enum Type
 class CGameObject
 {
 public:
+	bool cdeath=false;
 	float Level;//±Ì¿Ã
 	CGameObject();
 	CGameObject(Type type,mVector p,bool enemy,  bool t = false,mVector s=mVector(0,0,0));
